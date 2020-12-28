@@ -8,6 +8,43 @@
     <title>Document</title>
 </head>
 <body>
+    <script type="module">
+        import {DeterministicFiniteAutomata} from "./src/deterministic-finite-automata.js";
+        import {StateBase} from "./src/state-base.js";
 
+        const a = new StateBase();
+        const b = new StateBase();
+        const c = new StateBase();
+        const d = new StateBase();
+
+        const machine = new DeterministicFiniteAutomata();
+        machine.addState("a", a);
+        machine.addState("b", b);
+        machine.addState("c", c);
+        machine.addState("d", d);
+
+        machine.defineInputRelations("a", {
+            0: "c",
+            1: "b",
+        });
+
+        machine.defineInputRelations("b", {
+            0: "d",
+            1: "a"
+        })
+
+        machine.defineInputRelations("c", {
+            0: "a",
+            1: "d"
+        })
+
+        machine.defineInputRelations("d", {
+            0: "b",
+            1: "c"
+        })
+
+        machine.start("a", "d");
+        machine.input(1);
+    </script>
 </body>
 </html>

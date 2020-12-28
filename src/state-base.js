@@ -42,6 +42,15 @@ export class StateBase {
     }
 
     /**
+     * Remove a action from the state
+     * @param key {any} key the action was defined on
+     * @returns {Promise<void>}
+     */
+    async removeAction(key) {
+        this._actions.delete(key);
+    }
+
+    /**
      * Call a action on the state
      * @param key {any} key the action was defined on
      * @param parameters {array} parameters to pass on to the function
@@ -52,14 +61,5 @@ export class StateBase {
         if (fn != null) {
             fn(...parameters);
         }
-    }
-
-    /**
-     * Remove a action from the state
-     * @param key {any} key the action was defined on
-     * @returns {Promise<void>}
-     */
-    async removeAction(key) {
-        this._actions.delete(key);
     }
 }
