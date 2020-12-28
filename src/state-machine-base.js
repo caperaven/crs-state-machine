@@ -11,9 +11,10 @@ export class StateMachineBase {
 
     dispose() {
         this.currentState = null;
-        this.currentStateKey = null;
         this._states.forEach((value, key) => value.dispose());
         this._states.clear();
+        this._states = null;
+        this._disposed = true;
     }
 
     /**
@@ -34,8 +35,19 @@ export class StateMachineBase {
      * @param key {any} what is the key to use when referring to the state.
      * @param stateObject {StateBase} object inheriting from StateBase defining the state.
      */
-    async addState(key, stateObject) {
-        this._states.set(key, stateObject)
+    async addState(stateObject) {
+        this._states.set(stateObject.key, stateObject);
+    }
+
+    /**
+     * Add a collection of states
+     * @param stateObjects {array} collection of StateBase objects
+     * @returns {Promise<void>}
+     */
+    async addStates(stateObjects) {
+        for (let state of stateObjects) {
+            await this.addState(state);
+        }
     }
 
     /**
@@ -53,7 +65,6 @@ export class StateMachineBase {
             }
 
             this.currentState = null;
-            this.currentStateKey = null;
         }
 
         const state = this._states.get(key);
@@ -62,7 +73,6 @@ export class StateMachineBase {
             return false;
         }
 
-        this.currentStateKey = key;
         this.currentState = state;
         await state.enter();
         return true;

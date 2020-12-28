@@ -9,6 +9,7 @@ export class DeterministicFiniteAutomata extends StateMachineBase {
     dispose() {
         this._inputRelations.clear();
         this._inputRelations = null;
+        super.dispose();
     }
 
     async defineInputRelations(state, relationsObject) {
@@ -16,13 +17,9 @@ export class DeterministicFiniteAutomata extends StateMachineBase {
     }
 
     async input(value) {
-        const obj = this._inputRelations.get(this.currentStateKey);
-        if (obj == null) {
-            await this.addMessage(`no relation defined for ${this.currentStateKey}`);
-            return false;
-        }
-
+        const obj = this._inputRelations.get(this.currentState.key);
         const target = obj[value];
+
         if (target == null) {
             return false;
         }

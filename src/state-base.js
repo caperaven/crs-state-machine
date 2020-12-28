@@ -6,8 +6,13 @@
  * 3. actions object for state actions if you need it
  */
 export class StateBase {
-    constructor() {
+    get key() {
+        return this._key;
+    }
+
+    constructor(key) {
         this._actions = new Map();
+        this._key = key;
     }
 
     dispose() {
