@@ -20,9 +20,9 @@ async function init() {
 }
 
 async function performInput() {
-    await machine.performAction("log", ["Hello", "World"]);
+    await machine.callAction("log", ["Hello", "World"]);
     await machine.gotoState("state2");
-    await machine.performAction("log", ["Hello", "World"]);
+    await machine.callAction("log", ["Hello", "World"]);
 }
 
 init().then(performInput);

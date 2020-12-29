@@ -29,12 +29,12 @@ afterEach(() => {
 });
 
 test("SimpleStateMachine - perform action", async () => {
-    await machine.performAction("log", ["a", "b"]);
+    await machine.callAction("log", ["a", "b"]);
     expect(p1Value).toEqual("a v1");
     expect(p2Value).toEqual("b v1");
 
     await machine.gotoState("state2");
-    await machine.performAction("log", ["a", "b"]);
+    await machine.callAction("log", ["a", "b"]);
     expect(p1Value).toEqual("a v2");
     expect(p2Value).toEqual("b v2");
 })
