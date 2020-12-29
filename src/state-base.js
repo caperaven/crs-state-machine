@@ -63,10 +63,15 @@ export class StateBase {
      * @param parameters {array} parameters to pass on to the function
      * @returns {Promise<void>}
      */
-    async callAction(key, parameters) {
+    async callAction(key, parameters = null) {
         const fn = this._actions.get(key);
         if (fn != null) {
-            fn(...parameters);
+            if (parameters == null) {
+                fn();
+            }
+            else {
+                fn(...parameters);
+            }
         }
     }
 }

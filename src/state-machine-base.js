@@ -56,8 +56,12 @@ export class StateMachineBase {
      * @returns {Promise<boolean>} change the state of the machine to a given state, returns false if you can't exit the current state or can't enter the defined state.
      */
     async gotoState(key) {
+        if (key.indexOf("/") != -1) return this._gotoStatePath(key);
+
         let success = true;
         if (this.currentState != null) {
+            if (key === this.currentState.key) return true;
+
             success = await this.currentState.exit(this);
 
             if (success != true) {
@@ -76,6 +80,13 @@ export class StateMachineBase {
         this.currentState = state;
         await state.enter(this);
         return true;
+    }
+
+    async _gotoStatePath(key) {
+        const parts = key.split("/");
+        await this.gotoState(parts[0]);
+        key = key.replace(`${parts[0]}/`, "");
+        await this.currentState.gotoState(key);
     }
 
     /**

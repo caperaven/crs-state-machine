@@ -5,6 +5,15 @@ import {SimpleStateMachine} from "./simple-state-machine.js";
  * It's nothing more than and simple state machine masquerading as a state.
  */
 export class HierarchicalStateBase extends SimpleStateMachine {
+    get key() {
+        return this._key;
+    }
+
+    constructor(key) {
+        super();
+        this._key = key;
+    }
+
     /**
      * Async function for when you enter the state\
      * @parent {StateMachineBase} the state machine the state is attached too

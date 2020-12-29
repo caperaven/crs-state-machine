@@ -9,29 +9,45 @@
 </head>
 <body>
     <script type="module" async>
+        import {HierarchicalStateBase} from "./src/hierarchical-state-base.js";
         import {SimpleStateMachine} from "./src/simple-state-machine.js";
         import {StateBase} from "./src/state-base.js";
 
         let machine;
 
         async function init() {
-            const state1 = new StateBase("state1");
-            await state1.addAction("log", (p1, p2) => console.log(p1, p2));
+            const drawBoxState = new StateBase("draw-box");
+            await drawBoxState.addAction("draw", () => console.log("draw box"));
 
-            const state2 = new StateBase("state2");
-            await state2.addAction("log", (p1, p2) => console.error(p1, p2));
+            const drawLineState = new StateBase("draw-line");
+            await drawLineState.addAction("draw", () => console.log("draw line"));
+
+            const drawPolyState = new StateBase("draw-poly");
+            await drawPolyState.addAction("draw", () => console.log("draw poly"));
+
+            const drawState = new HierarchicalStateBase("draw");
+            await drawState.addStates([drawBoxState, drawLineState, drawPolyState]);
+            await drawState.start("draw-box");
+
+            const noneState = new StateBase("none");
 
             machine = new SimpleStateMachine();
-
-            await machine.addState(state1);
-            await machine.addState(state2);
-            await machine.start("state1");
+            await machine.addStates([noneState, drawState]);
+            await machine.start("none");
         }
 
         async function performInput() {
-            await machine.callAction("log", ["Hello", "World"]);
-            await machine.gotoState("state2");
-            await machine.callAction("log", ["Hello", "World"]);
+            await machine.gotoState("draw/draw-box");
+            await machine.callAction("draw");
+
+            await machine.gotoState("draw/draw-line");
+            await machine.callAction("draw");
+
+            await machine.gotoState("draw/draw-poly");
+            await machine.callAction("draw");
+
+            await machine.gotoState("none");
+            await machine.callAction("draw");
         }
 
         init().then(performInput);
