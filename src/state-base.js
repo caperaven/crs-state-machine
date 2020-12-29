@@ -21,18 +21,20 @@ export class StateBase {
     }
 
     /**
-     * Async function for when you enter the state
+     * Async function for when you enter the state\
+     * @parent {StateMachineBase} the state machine the state is attached too
      * @returns {boolean} return false if you can't enter this state for some reason
      */
-    async enter() {
+    async enter(parent) {
         return true;
     }
 
     /**
      * Async function for hen you exit the state.
+     * @parent {StateMachineBase} the state machine the state is attached too
      * @returns {boolean} return false if you can't exit the state for some reason
      */
-    async exit() {
+    async exit(parent) {
         return true;
     }
 

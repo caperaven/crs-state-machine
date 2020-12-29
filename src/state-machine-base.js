@@ -58,7 +58,7 @@ export class StateMachineBase {
     async gotoState(key) {
         let success = true;
         if (this.currentState != null) {
-            success = await this.currentState.exit();
+            success = await this.currentState.exit(this);
 
             if (success != true) {
                 return success;
@@ -74,7 +74,7 @@ export class StateMachineBase {
         }
 
         this.currentState = state;
-        await state.enter();
+        await state.enter(this);
         return true;
     }
 
@@ -85,7 +85,7 @@ export class StateMachineBase {
      * @param endKey {any} key defining the end state
      * @returns {Promise<boolean>}
      */
-    async start(startKey, endKey) {
+    async start(startKey, endKey = null) {
         this._startKey = startKey;
         this._endKey = endKey;
         return await this.gotoState(startKey);
