@@ -1,20 +1,17 @@
 # Deterministic finite automata
 
 ```js
-import {DeterministicFiniteAutomata} from "./src/deterministic-finite-automata.js";
-import {StateBase} from "./src/state-base.js";
-
 let machine;
 
 async function init() {
     // 1. define the states
-    const a = new StateBase("a");
-    const b = new StateBase("b");
-    const c = new StateBase("c");
-    const d = new StateBase("d");
+    const a = new crs.state.StateBase("a");
+    const b = new crs.state.StateBase("b");
+    const c = new crs.state.StateBase("c");
+    const d = new crs.state.StateBase("d");
 
     // 2. create state machine and add states
-    machine = new DeterministicFiniteAutomata();
+    machine = new crs.state.DeterministicFiniteAutomata();
     await machine.addStates([a, b, c, d]);
 
     // 3. define input relations for each state

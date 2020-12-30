@@ -1,19 +1,16 @@
 # Simple state actions
 
 ```js
-import {SimpleStateMachine} from "./src/simple-state-machine.js";
-import {StateBase} from "./src/state-base.js";
-
 let machine;
 
 async function init() {
-    const state1 = new StateBase("state1");
+    const state1 = new crs.state.StateBase("state1");
     await state1.addAction("log", (p1, p2) => console.log(p1, p2));
 
-    const state2 = new StateBase("state2");
+    const state2 = new crs.state.StateBase("state2");
     await state2.addAction("log", (p1, p2) => console.error(p1, p2));
 
-    machine = new SimpleStateMachine();
+    machine = new crs.state.SimpleStateMachine();
     await machine.addState(state1);
     await machine.addState(state2);
     await machine.start("state1");
