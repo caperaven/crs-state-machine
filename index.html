@@ -9,31 +9,15 @@
 </head>
 <body>
     <script type="module" async>
-        import {HierarchicalStateBase} from "./src/hierarchical-state-base.js";
-        import {SimpleStateMachine} from "./src/simple-state-machine.js";
-        import {StateBase} from "./src/state-base.js";
+        import {SimpleStateFactory} from "./src/simple-state-factory.js";
 
         let machine;
 
         async function init() {
-            const drawBoxState = new StateBase("draw-box");
-            await drawBoxState.addAction("draw", () => console.log("draw box"));
-
-            const drawLineState = new StateBase("draw-line");
-            await drawLineState.addAction("draw", () => console.log("draw line"));
-
-            const drawPolyState = new StateBase("draw-poly");
-            await drawPolyState.addAction("draw", () => console.log("draw poly"));
-
-            const drawState = new HierarchicalStateBase("draw");
-            await drawState.addStates([drawBoxState, drawLineState, drawPolyState]);
-            await drawState.start("draw-box");
-
-            const noneState = new StateBase("none");
-
-            machine = new SimpleStateMachine();
-            await machine.addStates([noneState, drawState]);
-            await machine.start("none");
+            machine = await SimpleStateFactory.create(["none", "draw/draw-box", "draw/draw-line", "draw/draw-poly"], "none")
+            await SimpleStateFactory.addAction(machine, "draw/draw-box", "draw", () => console.log("draw box"));
+            await SimpleStateFactory.addAction(machine, "draw/draw-line", "draw", () => console.log("draw line"));
+            await SimpleStateFactory.addAction(machine, "draw/draw-poly", "draw", () => console.log("draw poly"));
         }
 
         async function performInput() {
