@@ -1,8 +1,8 @@
 {
-    "name": "",
+    "name": "crs-state-machine",
     "version": "0.0.6",
-    "description": "",
-    "main": "index.js",
+    "description": "Simple state machines for application development",
+    "main": "crs-state-machine.js",
     "directories": {
         "test": "test"
     },
@@ -11,8 +11,8 @@
         "bundle": "rollup -c",
         "build-publish": "rollup -c & node build/publish.js"
     },
-    "keywords": [],
-    "author": "",
+    "keywords": ["state machine"],
+    "author": "Johan Rabie",
     "license": "ISC",
     "devDependencies": {
         "@babel/core": "^7.6.0",
