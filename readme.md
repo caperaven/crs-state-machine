@@ -10,4 +10,3 @@ This project aims at providing development solutions for using states in your ap
 <a target="_blank" href="https://github.com/caperaven/crs-state-machine/blob/master/documents/usage/simple-state-actions.md">Simple state actions</a>    
 <a target="_blank" href="https://github.com/caperaven/crs-state-machine/blob/master/documents/usage/state-factory.md">State factory</a>    
 
-## IN PROGRESS
