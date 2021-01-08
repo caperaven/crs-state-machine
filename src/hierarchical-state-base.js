@@ -15,7 +15,7 @@ export class HierarchicalStateBase extends SimpleStateMachine {
     }
 
     /**
-     * Async function for when you enter the state\
+     * Async function for when you enter the state
      * @parent {StateMachineBase} the state machine the state is attached too
      * @returns {boolean} return false if you can't enter this state for some reason
      */

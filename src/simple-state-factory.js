@@ -21,7 +21,7 @@ export class SimpleStateFactory {
     };
 }
 
-async function createState(machine, state) {
+export async function createState(machine, state) {
     if (state.indexOf("/") == -1) {
         await createSimpleState(machine, state);
     }
@@ -30,11 +30,11 @@ async function createState(machine, state) {
     }
 }
 
-async function createSimpleState(machine, state) {
+export async function createSimpleState(machine, state) {
     await machine.addState(new StateBase(state));
 }
 
-async function createHierarchicalState(machine, state) {
+export async function createHierarchicalState(machine, state) {
     const parts = state.split("/");
 
     let result = machine._states.get(parts[0]);
@@ -47,7 +47,7 @@ async function createHierarchicalState(machine, state) {
     await machine.addState(result);
 }
 
-async function getState(machine, state) {
+export async function getState(machine, state) {
     if (state.indexOf("/") == -1) {
         return machine._states.get(state);
     }

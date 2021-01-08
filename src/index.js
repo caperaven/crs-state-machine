@@ -1,6 +1,6 @@
 import {DeterministicFiniteAutomata} from "./deterministic-finite-automata.js";
 import {HierarchicalStateBase} from "./hierarchical-state-base.js";
-import {SimpleStateFactory} from "./simple-state-factory.js";
+import {SimpleStateFactory, createState, createSimpleState, createHierarchicalState, getState} from "./simple-state-factory.js";
 import {SimpleStateMachine} from "./simple-state-machine.js";
 import {StateBase} from "./state-base.js";
 import {StateMachineBase} from "./state-machine-base.js";
@@ -13,4 +13,10 @@ globalThis.crs.state = {
     SimpleStateMachine: SimpleStateMachine,
     StateBase: StateBase,
     HierarchicalStateBase: HierarchicalStateBase,
+    utils: {
+        createState: createState,
+        createSimpleState: createSimpleState,
+        createHierarchicalState: createHierarchicalState,
+        getState: getState
+    }
 }
