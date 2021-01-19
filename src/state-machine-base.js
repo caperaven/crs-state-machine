@@ -4,6 +4,18 @@
  * For example, if you can't exit the current state add a message using addMessage as to why.
  */
 export class StateMachineBase {
+    get currentState() {
+        return this._currentState;
+    }
+
+    set currentState(newValue) {
+        if (newValue != null) {
+            delete newValue.dispose;
+        }
+
+        this._currentState = newValue;
+    }
+
     constructor() {
         this._states = new Map();
         this.messages = [];
@@ -82,7 +94,7 @@ export class StateMachineBase {
 
         this.currentState = state;
         await state.enter(this);
-        delete state.disposed;
+
         return true;
     }
 
