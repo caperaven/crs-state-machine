@@ -62,7 +62,10 @@ export class StateMachineBase {
         if (this.currentState != null) {
             if (key === this.currentState.key) return true;
 
-            success = await this.currentState.exit(this);
+            if (this.currentState.disposed != true) {
+                success = await this.currentState.exit(this);
+                this.currentState.disposed = true;
+            }
 
             if (success === false) {
                 return success;
@@ -79,14 +82,16 @@ export class StateMachineBase {
 
         this.currentState = state;
         await state.enter(this);
+        delete state.disposed;
         return true;
     }
 
     async _gotoStatePath(key) {
         const parts = key.split("/");
 
-        if (this.currentState && this.currentState.key != parts[0]) {
+        if (this.currentState && this.currentState.key != parts[0] && this.currentState.disposed != true) {
             this.currentState.exit(this);
+            this.currentState.disposed = true;
         }
 
         await this.gotoState(parts[0]);
