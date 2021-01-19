@@ -64,7 +64,7 @@ export class StateMachineBase {
 
             success = await this.currentState.exit(this);
 
-            if (success != true) {
+            if (success === false) {
                 return success;
             }
 
@@ -84,6 +84,11 @@ export class StateMachineBase {
 
     async _gotoStatePath(key) {
         const parts = key.split("/");
+
+        if (this.currentState && this.currentState.key != parts[0]) {
+            this.currentState.exit(this);
+        }
+
         await this.gotoState(parts[0]);
         key = key.replace(`${parts[0]}/`, "");
         await this.currentState.gotoState(key);
