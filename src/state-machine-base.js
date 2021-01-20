@@ -10,7 +10,7 @@ export class StateMachineBase {
 
     set currentState(newValue) {
         if (newValue != null) {
-            delete newValue.dispose;
+            delete newValue.exited;
         }
 
         this._currentState = newValue;
@@ -23,7 +23,12 @@ export class StateMachineBase {
 
     dispose() {
         this.currentState = null;
-        this._states.forEach((value, key) => value.dispose());
+        this._states.forEach((value, key) => {
+            if (value.dispose == null) {
+                debugger;
+            }
+            value.dispose()
+        });
         this._states.clear();
         this._states = null;
         this._disposed = true;
@@ -72,11 +77,14 @@ export class StateMachineBase {
 
         let success = true;
         if (this.currentState != null) {
-            if (key === this.currentState.key) return true;
+            if (key === this.currentState.key) {
+                delete this.currentState.exited;
+                return true;
+            }
 
-            if (this.currentState.disposed != true) {
+            if (this.currentState.exited != true) {
                 success = await this.currentState.exit(this);
-                this.currentState.disposed = true;
+                this.currentState.exited = true;
             }
 
             if (success === false) {
@@ -101,9 +109,9 @@ export class StateMachineBase {
     async _gotoStatePath(key) {
         const parts = key.split("/");
 
-        if (this.currentState && this.currentState.key != parts[0] && this.currentState.disposed != true) {
+        if (this.currentState && this.currentState.key != parts[0] && this.currentState.exited != true) {
             this.currentState.exit(this);
-            this.currentState.disposed = true;
+            this.currentState.exited = true;
         }
 
         await this.gotoState(parts[0]);

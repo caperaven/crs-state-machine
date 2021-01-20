@@ -29,9 +29,9 @@ export class HierarchicalStateBase extends SimpleStateMachine {
      * @returns {boolean} return false if you can't exit the state for some reason
      */
     async exit(parent) {
-        if (this.currentState && this.currentState.disposed != true) {
+        if (this.currentState && this.currentState.exited != true) {
             this.currentState.exit(parent);
-            this.currentState.disposed = true;
+            this.currentState.exited = true;
         }
 
         return true;

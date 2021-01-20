@@ -4,25 +4,31 @@ import {StateBase} from "../src/state-base.js";
 
 let instance;
 let actionText;
+let boxState;
+let lineState;
+let polyState;
 
 beforeEach(async () => {
-    const drawBoxState = new StateBase("draw-box");
-    await drawBoxState.addAction("draw", () => actionText = "draw box");
+    boxState = new StateBase("draw-box");
+    await boxState.addAction("draw", () => actionText = "draw box");
 
-    const drawLineState = new StateBase("draw-line");
-    await drawLineState.addAction("draw", () => actionText = "draw line");
+    lineState = new StateBase("draw-line");
+    await lineState.addAction("draw", () => actionText = "draw line");
 
-    const drawPolyState = new StateBase("draw-poly");
-    await drawPolyState.addAction("draw", () => actionText = "draw poly");
+    polyState = new StateBase("draw-poly");
+    await polyState.addAction("draw", () => actionText = "draw poly");
 
     const drawState = new HierarchicalStateBase("draw");
-    await drawState.addStates([drawBoxState, drawLineState, drawPolyState]);
+    await drawState.addStates([boxState, lineState, polyState]);
     await drawState.start("draw-box");
+
+    const defaultState = new HierarchicalStateBase("default");
+    await defaultState.addState(new StateBase("none"));
 
     const noneState = new StateBase("none");
 
     instance = new SimpleStateMachine();
-    await instance.addStates([noneState, drawState]);
+    await instance.addStates([noneState, drawState, defaultState]);
     await instance.start("none");
 });
 
@@ -48,3 +54,20 @@ test("HierarchicalStateBase", async () => {
     await instance.callAction("draw");
     expect(actionText).toEqual("");
 });
+
+test ("HierarchicalStateBase - exited - inter state", async () => {
+    await instance.gotoState("draw/draw-box");
+
+    await instance.gotoState("draw/draw-line");
+    expect(boxState.exited).toBeTruthy();
+
+    await instance.gotoState("draw/draw-box");
+    expect(boxState.exited).toBeUndefined();
+})
+
+test ("HierarchicalStateBase - exited", async () => {
+    await instance.gotoState("draw/draw-box");
+    await instance.gotoState("default/none");
+    await instance.gotoState("draw/draw-box");
+    expect(instance.currentState.currentState.exited).toBeUndefined();
+})
