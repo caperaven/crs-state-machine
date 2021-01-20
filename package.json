@@ -1,6 +1,6 @@
 {
     "name": "crs-state-machine",
-    "version": "0.0.21",
+    "version": "0.0.22",
     "description": "Simple state machines for application development",
     "main": "crs-state-machine.js",
     "directories": {
