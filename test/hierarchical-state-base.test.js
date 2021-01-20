@@ -54,20 +54,3 @@ test("HierarchicalStateBase", async () => {
     await instance.callAction("draw");
     expect(actionText).toEqual("");
 });
-
-test ("HierarchicalStateBase - exited - inter state", async () => {
-    await instance.gotoState("draw/draw-box");
-
-    await instance.gotoState("draw/draw-line");
-    expect(boxState.exited).toBeTruthy();
-
-    await instance.gotoState("draw/draw-box");
-    expect(boxState.exited).toBeUndefined();
-})
-
-test ("HierarchicalStateBase - exited", async () => {
-    await instance.gotoState("draw/draw-box");
-    await instance.gotoState("default/none");
-    await instance.gotoState("draw/draw-box");
-    expect(instance.currentState.currentState.exited).toBeUndefined();
-})

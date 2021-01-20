@@ -4,31 +4,18 @@
  * For example, if you can't exit the current state add a message using addMessage as to why.
  */
 export class StateMachineBase {
-    get currentState() {
-        return this._currentState;
-    }
-
-    set currentState(newValue) {
-        if (newValue != null) {
-            delete newValue.exited;
-        }
-
-        this._currentState = newValue;
-    }
-
     constructor() {
         this._states = new Map();
         this.messages = [];
     }
 
     dispose() {
-        this.currentState = null;
-        this._states.forEach((value, key) => {
-            if (value.dispose == null) {
-                debugger;
-            }
-            value.dispose()
-        });
+        if (this.currentState != null) {
+            this.currentState.exit(this);
+            this.currentState = null;
+        }
+
+        this._states.forEach((value, key) => value.dispose());
         this._states.clear();
         this._states = null;
         this._disposed = true;
@@ -75,44 +62,23 @@ export class StateMachineBase {
     async gotoState(key) {
         if (key.indexOf("/") != -1) return this._gotoStatePath(key);
 
-        let success = true;
         if (this.currentState != null) {
-            if (key === this.currentState.key) {
-                delete this.currentState.exited;
-                return true;
-            }
-
-            if (this.currentState.exited != true) {
-                success = await this.currentState.exit(this);
-                this.currentState.exited = true;
-            }
-
-            if (success === false) {
-                return success;
-            }
-
-            this.currentState = null;
+            this.currentState.exit(this);
         }
 
-        const state = this._states.get(key);
-        if (state == null) {
-            await this.addMessage(`no state: ${key}`);
+        if (this._states.has(key) == false) {
+            this.messages.push(`no state: ${key}`);
             return false;
         }
 
-        this.currentState = state;
-        await state.enter(this);
+        this.currentState = this._states.get(key);
+        await this.currentState.enter(this);
 
         return true;
     }
 
     async _gotoStatePath(key) {
         const parts = key.split("/");
-
-        if (this.currentState && this.currentState.key != parts[0] && this.currentState.exited != true) {
-            this.currentState.exit(this);
-            this.currentState.exited = true;
-        }
 
         await this.gotoState(parts[0]);
         key = key.replace(`${parts[0]}/`, "");
